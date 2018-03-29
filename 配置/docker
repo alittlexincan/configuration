@@ -1,0 +1,234 @@
+
+-----------------------------------------------------------
+安装ssh服务
+sudo apt-get install openssh-server
+开启ssh服务
+sudo /etc/init.d/ssh restart
+三、进入系统文件etc/ssh/sshd_config文件配置
+1.vi /etc/ssh/sshd_config    将PermitRootLogin的注释取消，或者将no改为yes。  
+2.service sshd restart  
+3.setup命令进入将防火墙关闭。
+四、进入系统文件 /etc/ssh/ssh_config文件配置
+在终端下面输入：vi /etc/ssh/ssh_config 
+#去掉Port 22前面的#号
+Port 22
+五、配置IP
+ifconfig eth0 192.168.121.11
+
+
+
+Ciphers aes128-cbc,aes192-cbc,aes256-cbc,aes128-ctr,aes192-ctr,aes256-ctr,3des-cbc,arcfour128,arcfour256,arcfour,blowfish-cbc,cast128-cbc
+
+MACs hmac-md5,hmac-sha1,umac-64@openssh.com,hmac-ripemd160,hmac-sha1-96,hmac-md5-96
+
+KexAlgorithms diffie-hellman-group1-sha1,diffie-hellman-group14-sha1,diffie-hellman-group-exchange-sha1,diffie-hellman-group-exchange-sha256,ecdh-sha2-nistp256,ecdh-sha2-nistp384,ecdh-sha2-nistp521,diffie-hellman-group1-sha1,curve25519-sha256@libssh.org
+
+
+
+
+
+
+
+server$ cat /etc/ssh/sshd_config
+# Package generated configuration file
+# See the sshd_config(5) manpage for details
+
+# What ports, IPs and protocols we listen for
+Port 22
+# Use these options to restrict which interfaces/protocols sshd will bind to
+#ListenAddress ::
+#ListenAddress 0.0.0.0
+Protocol 2
+# HostKeys for protocol version 2
+HostKey /etc/ssh/ssh_host_rsa_key
+HostKey /etc/ssh/ssh_host_dsa_key
+#Privilege Separation is turned on for security
+UsePrivilegeSeparation yes
+
+# Lifetime and size of ephemeral version 1 server key
+KeyRegenerationInterval 3600
+ServerKeyBits 768
+
+# Logging
+SyslogFacility AUTH
+LogLevel INFO
+
+# Authentication:
+LoginGraceTime 120
+PermitRootLogin no
+StrictModes yes
+
+RSAAuthentication yes
+PubkeyAuthentication yes
+AuthorizedKeysFile  %h/.ssh/authorized_keys
+
+# Don't read the user's ~/.rhosts and ~/.shosts files
+IgnoreRhosts yes
+# For this to work you will also need host keys in /etc/ssh_known_hosts
+RhostsRSAAuthentication no
+# similar for protocol version 2
+HostbasedAuthentication no
+# Uncomment if you don't trust ~/.ssh/known_hosts for RhostsRSAAuthentication
+#IgnoreUserKnownHosts yes
+
+# To enable empty passwords, change to yes (NOT RECOMMENDED)
+PermitEmptyPasswords no
+
+# Change to yes to enable challenge-response passwords (beware issues with
+# some PAM modules and threads)
+ChallengeResponseAuthentication no
+
+# Change to no to disable tunnelled clear text passwords
+#PasswordAuthentication yes
+
+# Kerberos options
+#KerberosAuthentication no
+#KerberosGetAFSToken no
+#KerberosOrLocalPasswd yes
+#KerberosTicketCleanup yes
+
+# GSSAPI options
+#GSSAPIAuthentication no
+#GSSAPICleanupCredentials yes
+
+X11Forwarding no
+X11DisplayOffset 10
+PrintMotd no
+PrintLastLog yes
+TCPKeepAlive yes
+#UseLogin no
+
+#MaxStartups 10:30:60
+#Banner /etc/issue.net
+
+# Allow client to pass locale environment variables
+AcceptEnv LANG LC_*
+
+Subsystem sftp /usr/lib/openssh/sftp-server
+
+# Set this to 'yes' to enable PAM authentication, account processing,
+# and session processing. If this is enabled, PAM authentication will
+# be allowed through the ChallengeResponseAuthentication and
+# PasswordAuthentication.  Depending on your PAM configuration,
+# PAM authentication via ChallengeResponseAuthentication may bypass
+# the setting of "PermitRootLogin without-password".
+# If you just want the PAM account and session checks to run without
+# PAM authentication, then enable this but set PasswordAuthentication
+# and ChallengeResponseAuthentication to 'no'.
+UsePAM yes
+UseDNS no
+AllowUsers lorddaedra
+------------------------------------------------------------------------
+Ubuntu14.04防火墙配置
+
+1、安装：
+	sudo apt-get install ufw
+2、启用：
+	sudo ufw enable
+	sudo ufw default deny
+3、开启/禁用：
+
+	禁用防火墙
+	sudo ufw disable
+
+	允许所有的外部IP访问本机的22/tcp (ssh)端口
+	sudo ufw allow 22/tcp 
+
+	禁止所有外部IP访问本机的22/tcp(ssh)端口
+	sudo ufw deny 22/tcp 
+
+	删除防火墙中的规则
+	sudo ufw delete deny 22/tcp 
+4、查询防火墙当前的状态
+	sudo ufw status
+	至                          动作          来自
+	-                          --          --
+	8080                       ALLOW       Anywhere                  
+	8080/tcp                   ALLOW       Anywhere                  
+	Anywhere                   ALLOW       127.0.0.1                 
+	8080 (v6)                  ALLOW       Anywhere (v6)             
+	8080/tcp (v6)              ALLOW       Anywhere (v6)   
+
+5、添加所有外部IP均可以按TCP协议访问123端口过则：
+	sudo ufw allow 8080/tcp
+6、禁用某个端口：
+	sudo ufw deny 8080/tcp
+7、删除某个端口：
+	sudo ufw delete deny 8080/tcp
+8、允许某个IP访问所有的本机端口：
+	sudo ufw allow from 192.168.10.102
+
+9、删除某个IP访问的规则：
+	sudo ufw delete allow from 192.168.10.102
+
+------------------------------------------------------------
+
+创建容器命令
+(家)192.168.1.100是本机ip，将本机的8080端口映射到tomcat的8080端口
+sudo docker run --name tomcat-8-01 -d -p 192.168.1.100:8080:8080 tomcat
+
+mysql
+sudo docker run --name mysql-01 -d -p 192.168.1.100:3306:3306 -e MYSQL_ROOT_PASSWORD=root mysql
+
+oracle
+oracle-xe-11g sid XE system oracle
+sudo docker run -d -p 192.168.0.147:2022:22 -p 192.168.0.147:1521:1521 --name hn-oracle -v /home/xincan/oracle-db:/mnt wnameless/oracle-xe-11g
+
+
+nginx
+sudo docker run --name com-nginx -d -p 192.168.85.128:8888:80 nginx
+
+
+rabbitmq
+docker run -d --name myrabbitmq -p 192.168.0.147:5672:5672 -p 192.168.0.147:15672:15672 rabbitmq:management
+
+
+redis
+docker run -p 192.168.0.147:6379:6379 -v /usr/local/redisData/master/data:/data -d redis:latest redis-server --appendonly yes
+
+命令说明：
+-p 192.168.0.147:6379:6379 :将容器的6379端口映射到主机的6379端口
+-v /usr/local/redisData/master/data:/data :将主机中当前目录下的data挂载到容器的/data
+redis-server --appendonly yes :在容器执行redis-server启动命令，并打开redis持久化配置
+
+
+
+外部访问容器实现
+
+容器允许外部访问，可以在 docker run 时候通过 -p 或 -P 参数来启用。
+不管用那种办法，其实也是在本地的 iptable 的 nat 表中添加相应的规则。
+使用 -P 时：
+
+$ iptables -t nat -nL
+target     prot opt source               destination         
+RETURN     all  --  0.0.0.0/0            0.0.0.0/0           
+DNAT       tcp  --  0.0.0.0/0            192.168.10.102       tcp dpt:8080 to:172.17.0.2:8080
+
+
+
+
+设置权限
+sudo chmod 777  文件名称
+
+容器里修改mysql数据库字符集
+1：进入mysql容器查看字符集   # show variables like '%character%'; 
+2：修改 vim /etc/mysql/mysql.conf.d/mysqld.cnf
+3：复制下面代码，替换[mysqld]
+
+
+
+[client]
+default-character-set=utf8
+
+[mysql]
+default-character-set=utf8
+
+[mysqld]
+init_connect='SET collation_connection = utf8_unicode_ci'
+init_connect='SET NAMES utf8'
+character-set-server=utf8
+collation-server=utf8_unicode_ci
+skip-character-set-client-handshake
+
+
+
