@@ -192,6 +192,9 @@ docker run -p 192.168.0.147:6379:6379 -v /usr/local/redisData/master/data:/data 
 redis-server --appendonly yes :在容器执行redis-server启动命令，并打开redis持久化配置
 
 
+设置容器与主机时间同步
+docker cp /etc/localtime mysql-master:/etc/localtime
+
 
 外部访问容器实现
 
