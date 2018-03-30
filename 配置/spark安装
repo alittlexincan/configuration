@@ -1,0 +1,38 @@
+第一步： 安装jdk
+第二步：安装Scala 首先在官网中下载好scala，然后解压，并且配置环境变量
+
+	tar -avxf scala-2.12.1.tgz
+	sudo mv scala-2.12.1 /usr/lib/
+	vim ~/.bashrc 
+	source ~/.bashrc
+	scala -version  #如果安装成功，就可以查看scala的版本号
+
+	备注，我的~/.bashrc中
+
+	export JAVA_HOME=/usr/lib/jvm/java
+	export JRE_HOME=${JAVA_HOME}/jre
+	export CLASSPATH=.:${JAVA_HOME}/lib:${JRE_HOME}/lib
+	export PATH=${JAVA_HOME}/bin:$PATH
+
+	export SCALA_HOME=/usr/lib/scala-2.12.1
+	export PATH=$PATH:${SCALA_HOME}/bin
+
+第三步：安装spark 首先从官网上面下载好安装包
+
+	tar spark-2.1.0-bin-hadoop2.7.tgz
+	sudo mv spark-2.1.0-bin-hadoop2.7 /usr/lib/
+	vim ~/.bashrc 
+	source ~/.bashrc 
+	#为当前用户赋予Spark目录权限
+	sudo chown -hR username /usr/lib/spark-2.1.0-bin-hadoop2.7/
+	cd spark-2.1.0-bin-hadoop2.7/
+	cd bin/
+	ls -al
+	pyspark 
+
+
+
+
+
+
+
