@@ -1,0 +1,23 @@
+第一：解压nexus
+sudo tar -xvzf nexus-3.14.0-04-unix.tar.gz
+
+第二：创建nexus-3.14文件夹
+sudo mkdir nexus-3.14
+
+第三：将解压后的两个文件夹nexus-3.14.0-04  sonatype-work移动到nexus-3.14文件夹下
+sudo mkdir nexus-3.14.0-04 nexus-3.14
+sudo mkdir sonatype-work nexus-3.14
+
+第四：将nexus-3.14移动至/usr/lib/下
+sudo mv nexus-3.14 /usr/lib
+
+第五：进入/etc/profile 在最后添加一行export RUN_ROOT_USER=root  给nexus授权root用户可以访问
+sudo vim /etc/profile
+
+第六：切换到/usr/lib/nexus-3.14/nexus-3.14.0-04/bin下找到nexus执行程序
+cd /usr/lib/nexus-3.14/nexus-3.14.0-04/bin
+
+第七：启动nexus，稍等一会儿
+./nexus start   -- 启动nexus
+./nexus stop	-- 关闭nexus
+./nexus status	-- 查看nexus启动状态
