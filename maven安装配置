@@ -1,0 +1,26 @@
+第一：下载maven
+sudo wget http://mirrors.hust.edu.cn/apache/maven/maven-3/3.5.4/binaries/apache-maven-3.5.4-bin.tar.gz
+
+第二：解压maven
+sudo tar -xvzf apache-maven-3.5.4-bin.tar.gz
+
+第三：将apache-maven-3.5.4移动至/usr/lib/下
+sudo mv apache-maven-3.5.4 /usr/lib
+
+第四：配置环境变量（先安装jdk，并配置环境变量）
+sudo vim ~/.bashrc
+
+在最后添加如下代码
+export MAVEN_HOME=/usr/lib/apache-maven-3.5.4
+export MAVEN_HOME
+export PATH=${PATH}:${MAVEN_HOME}/bin
+
+第五：测试
+mvn -v
+
+出现如下信息表示配置成功
+Apache Maven 3.5.4 (1edded0938998edf8bf061f1ceb3cfdeccf443fe; 2018-06-18T02:33:14+08:00)
+Maven home: /usr/lib/apache-maven-3.5.4
+Java version: 1.8.0_192, vendor: Oracle Corporation, runtime: /usr/lib/jvm/jdk1.8.0_192/jre
+Default locale: zh_CN, platform encoding: UTF-8
+OS name: "linux", version: "4.15.0-38-generic", arch: "amd64", family: "unix"
