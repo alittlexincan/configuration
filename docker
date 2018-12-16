@@ -178,6 +178,8 @@ Ubuntu14.04防火墙配置
 
 第二步：sudo docker run --name mysql-01 -d -p 192.168.99.220:3306:3306 -e MYSQL_ROOT_PASSWORD=root mysql
 
+docker run --name mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=root -idt mysql --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+
 第三步：sudo docker exec -it mysql /bin/bash
 
 第四步：mysql -uroot -uroot
