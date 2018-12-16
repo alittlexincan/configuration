@@ -25,10 +25,6 @@ KexAlgorithms diffie-hellman-group1-sha1,diffie-hellman-group14-sha1,diffie-hell
 
 
 
-
-
-
-
 server$ cat /etc/ssh/sshd_config
 # Package generated configuration file
 # See the sshd_config(5) manpage for details
@@ -118,9 +114,10 @@ Subsystem sftp /usr/lib/openssh/sftp-server
 UsePAM yes
 UseDNS no
 AllowUsers lorddaedra
+
 ------------------------------------------------------------------------
 Ubuntu14.04防火墙配置
-
+------------------------------------------------------------------------
 1、安装：
 	sudo apt-get install ufw
 2、启用：
@@ -161,30 +158,87 @@ Ubuntu14.04防火墙配置
 9、删除某个IP访问的规则：
 	sudo ufw delete allow from 192.168.10.102
 
-------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------
 
 创建容器命令
-(家)192.168.1.100是本机ip，将本机的8080端口映射到tomcat的8080端口
-sudo docker run --name tomcat-8-01 -d -p 192.168.1.100:8080:8080 tomcat
 
-mysql
-sudo docker run --name mysql-01 -d -p 192.168.1.100:3306:3306 -e MYSQL_ROOT_PASSWORD=root mysql
+-------------------------------------------------------------------------------------------------------
+创建 tomcat
+-------------------------------------------------------------------------------------------------------
 
-oracle
+第一步：docker pull tomcat
+
+第二步：sudo docker run --name tomcat-8-01 -d -p 192.168.99.220:8080:8080 tomcat
+
+-------------------------------------------------------------------------------------------------------
+创建 mysql
+-------------------------------------------------------------------------------------------------------
+
+第一步：docker pull mysql
+
+第二步：sudo docker run --name mysql-01 -d -p 192.168.99.220:3306:3306 -e MYSQL_ROOT_PASSWORD=root mysql
+
+第三步：sudo docker exec -it mysql /bin/bash
+
+第四步：mysql -uroot -uroot
+
+第五步：ALTER USER 'root'@'%' IDENTIFIED WITH mysql_native_password BY 'root';
+
+第六步：GRANT ALL PRIVILEGES ON *.* TO 'root'@'%'
+
+第七步：FLUSH PRIVILEGES;
+
+--------------------------------------------------------------------------------------------------------
+创建postgres数据库
+--------------------------------------------------------------------------------------------------------
+
+第一步：docker pull postgres
+
+第二步：创建并运行容器，配置数据库端口映射、登录名称、登录地址、数据库名称
+docker run --name postgres -d -p 5432:5432 -e POSTGRES_PASSWORD=root -e PGDATA=/data/ -e POSTGRES_USER=root -e POSTGRES_DB=ewip postgres
+
+第三步：进入容器
+docker exec -it postgres /bin/bash
+
+第四步：进入数据库
+psql --host=127.0.0.1 --username=root --password --dbname=ewip
+
+第五步：输入密码进入
+root
+
+--------------------------------------------------------------------------------------------------------
+创建 oracle
+--------------------------------------------------------------------------------------------------------
+
+第一步：docker pull oracle
+
 oracle-xe-11g sid XE system oracle
-sudo docker run -d -p 192.168.0.147:2022:22 -p 192.168.0.147:1521:1521 --name hn-oracle -v /home/xincan/oracle-db:/mnt wnameless/oracle-xe-11g
+第二步：sudo docker run -d -p 192.168.0.147:2022:22 -p 192.168.0.147:1521:1521 --name hn-oracle -v /home/xincan/oracle-db:/mnt wnameless/oracle-xe-11g
 
+---------------------------------------------------------------------------------------------------------
+创建 nginx
+---------------------------------------------------------------------------------------------------------
+第一步：docker pull nginx
 
-nginx
-sudo docker run --name com-nginx -d -p 192.168.85.128:8888:80 nginx
+第二步：sudo docker run --name com-nginx -d -p 192.168.85.128:8888:80 nginx
 
+---------------------------------------------------------------------------------------------------------
+创建 rabbitmq
+-----------------------------------------------------------------------------------------------------------
 
-rabbitmq
-docker run -d --name myrabbitmq -p 192.168.0.147:5672:5672 -p 192.168.0.147:15672:15672 rabbitmq:management
+第一步：docker pull nginx
 
+第二步：docker run -d --name myrabbitmq -p 192.168.0.147:5672:5672 -p 192.168.0.147:15672:15672 rabbitmq:management
 
-redis
-docker run -p 192.168.0.147:6379:6379 -v /usr/local/redisData/master/data:/data -d redis:latest redis-server --appendonly yes
+-----------------------------------------------------------------------------------------------------------
+创建 redis
+-----------------------------------------------------------------------------------------------------------
+
+第一步：docker pull redis
+
+第二步：docker run -p 192.168.0.147:6379:6379 -v /usr/local/redisData/master/data:/data -d redis:latest redis-server --appendonly yes
+
+-----------------------------------------------------------------------------------------------------------
 
 命令说明：
 -p 192.168.0.147:6379:6379 :将容器的6379端口映射到主机的6379端口
