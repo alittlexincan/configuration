@@ -1,0 +1,16 @@
+
+第一：替換指定文件中指定字符串
+
+	使用方式：sed -i 's/老字符串/新字符串/g' 文件名稱
+	    例子：sed -i 's/utf8/utfmd4/g' ewip.sql
+
+第二：單引號替換雙引號
+
+	sed -i s#\'#\"#g test.txt
+
+	sed -i "s/'/\"/g" test.txt
+
+	
+
+
+
