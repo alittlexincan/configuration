@@ -249,7 +249,10 @@ redis-server --appendonly yes :在容器执行redis-server启动命令，并打�
 
 
 设置容器与主机时间同步
-docker cp /etc/localtime mysql-master:/etc/localtime
+第一种：docker cp /etc/localtime mysql-master:/etc/localtime
+第二种：docker cp /usr/share/zoneinfo/Asia/Shanghai mysql:/usr/share/zoneinfo/Asia
+
+关闭容器，然后在启动容器
 
 
 外部访问容器实现
